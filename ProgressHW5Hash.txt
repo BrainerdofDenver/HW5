@@ -1,0 +1,107 @@
+
+//My progress so far
+//I plan to create a stand-alone key genorator for the hash
+//table using the function: (pi*key)%257
+//I'll have my notebook uploaded with some test samples
+
+
+/*
+   Simple object class to take DMA.txt file values and a key
+*/
+public class DMAobject{
+   
+   //Class variables
+   private final int DMA;
+   private final String Region;
+   private final String State;
+   private int key;
+   
+   //Class constructor
+   public DMAobject(int k,int d,String r,String s){
+      key = k;    Region = r;
+      DMA = d;    State = s;
+   }
+   //Class mutators
+   public void setKey(int k){
+      key = k;
+   }
+   //Class accessors
+   public int getKey(){
+      return key;
+   }
+   public int getDMA(){
+      return DMA;
+   }
+   public String getRegion(){
+      return Region;
+   }
+   public String getState(){
+      return State;
+   }
+}
+
+//*****************************************************************
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Hashtable;
+/*
+Homework 5: Hash algorithm implementation
+Programmer: Andrew Brainerd
+objective: To design a Hashing program to take in the DMA.txt
+           file, create a unique key for each object, and index
+           the objects into the table while avoiding collisions.
+           
+*/
+public class Homework5Hash{
+   public static void main(String[] args){
+
+               //variables
+      int in=0;
+      int in2=0;
+      int in3=0;
+      String s1= "empty";
+      
+      ArrayList list1 = new ArrayList(212);
+      
+               //Code to take values from the DMA file
+               //and set them into an arraylist to be used
+               //to construct the hash table
+      try{
+         File f1 = new File("DMA.txt");
+         Scanner scan1 = new Scanner(f1);
+            //clears the first line as they are not relevent values
+         scan1.useDelimiter("500");
+         scan1.next();
+         
+         scan1.useDelimiter(",|\n");//sets the scanner's delimeter to take values between
+                                    //commas and new line
+   
+         while(scan1.hasNextLine()){//reads integer value in DMA.txt file
+            if(scan1.hasNextInt()){
+               in2=scan1.nextInt();
+               System.out.println("int value: " + in2);
+               list1.add(in2);
+                  
+            }
+            if(scan1.hasNext()){//reads the region and state
+            s1 = scan1.next();
+            System.out.println("String value " + in +": " + s1);
+            in++;
+            list1.add(s1);
+            }
+         
+         }
+         //used to check if the array was properly storing the values
+         for(int i = 0; i < list1.size(); i++){
+            System.out.println(list1.get(i));
+         }
+         scan1.close();
+         }
+      catch(FileNotFoundException e){
+         e.printStackTrace();
+         }
+      }
+   }
