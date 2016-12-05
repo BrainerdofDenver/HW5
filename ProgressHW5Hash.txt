@@ -1,11 +1,88 @@
-
-//My progress so far
-//I plan to create a stand-alone key genorator for the hash
-//table using the function: (pi*key)%257
-//I'll have my notebook uploaded with some test samples
-
-
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Hashtable;
 /*
+Homework 5: Hash algorithm implementation
+Programmer: Andrew Brainerd
+objective: To design a Hashing program to take in the DMA.txt
+           file, create a unique key for each object, and index
+           the objects into the table while avoiding collisions.
+           
+*/
+public class Homework5Hash{
+   public static void main(String[] args){
+
+               //variables
+      int in = 0;
+      int in2 = 0;
+      int in3 = 0;
+      int tmp1 = 0;
+      String tmp2 = null;
+      String tmp3 = null;
+      int tmp4 = 0;
+      String s1= "empty";
+      
+      ArrayList list1 = new ArrayList(212*3);
+      Hashtable HashT = new Hashtable(257);
+      PiHash HashyHash = new PiHash();
+      DMAobject TmpDMA;
+      
+               //Code to take values from the DMA file
+               //and set them into an arraylist to be used
+               //to construct the hash table
+      try{
+         File f1 = new File("DMA.txt");
+         Scanner scan1 = new Scanner(f1);
+            //clears the first line as they are not relevent values
+         scan1.useDelimiter("500");
+         scan1.next();
+         
+         scan1.useDelimiter(",|\n");//sets the scanner's delimeter to take values between
+                                    //commas and new line
+   
+         while(scan1.hasNextLine()){//reads integer value in DMA.txt file
+            if(scan1.hasNextInt()){
+               in2=scan1.nextInt();
+               System.out.println("int value: " + in2);
+               list1.add(in2);
+                  
+            }
+            if(scan1.hasNext()){//reads the region and state
+            s1 = scan1.next();
+            System.out.println("String value " + in +": " + s1);
+            in++;
+            list1.add(s1);
+            }
+         
+         }
+         //used to check if the array was properly storing the values
+         for(int i = 0; i < list1.size(); i++){
+            System.out.println(list1.get(i));
+         }
+         for(int i = 0; i < list1.size(); i=i+3){
+            tmp1 = (int) list1.get(i);
+            tmp2 = (String) list1.get(i+1);
+            tmp3 = (String) list1.get(i+2);
+            tmp4 = HashyHash.genKey(tmp1);
+            DMAobject DMA = new DMAobject(tmp4,tmp1,tmp2,tmp3);
+            HashT.put(tmp4,DMA);           
+         }
+         tmp4 = HashyHash.genKey(600);
+         TmpDMA = (DMAobject) HashT.get(tmp4);
+         System.out.println(TmpDMA.getDMA());
+         scan1.close();
+         }
+      catch(FileNotFoundException e){
+         e.printStackTrace();
+         }
+      }
+   }
+   
+   //***************************************************************
+   
+   /*
    Simple object class to take DMA.txt file values and a key
 */
 public class DMAobject{
@@ -40,68 +117,19 @@ public class DMAobject{
    }
 }
 
-//*****************************************************************
+//**********************************************************************
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.Hashtable;
-/*
-Homework 5: Hash algorithm implementation
-Programmer: Andrew Brainerd
-objective: To design a Hashing program to take in the DMA.txt
-           file, create a unique key for each object, and index
-           the objects into the table while avoiding collisions.
-           
-*/
-public class Homework5Hash{
-   public static void main(String[] args){
+public class PiHash{
 
-               //variables
-      int in=0;
-      int in2=0;
-      int in3=0;
-      String s1= "empty";
-      
-      ArrayList list1 = new ArrayList(212);
-      
-               //Code to take values from the DMA file
-               //and set them into an arraylist to be used
-               //to construct the hash table
-      try{
-         File f1 = new File("DMA.txt");
-         Scanner scan1 = new Scanner(f1);
-            //clears the first line as they are not relevent values
-         scan1.useDelimiter("500");
-         scan1.next();
-         
-         scan1.useDelimiter(",|\n");//sets the scanner's delimeter to take values between
-                                    //commas and new line
-   
-         while(scan1.hasNextLine()){//reads integer value in DMA.txt file
-            if(scan1.hasNextInt()){
-               in2=scan1.nextInt();
-               System.out.println("int value: " + in2);
-               list1.add(in2);
-                  
-            }
-            if(scan1.hasNext()){//reads the region and state
-            s1 = scan1.next();
-            System.out.println("String value " + in +": " + s1);
-            in++;
-            list1.add(s1);
-            }
-         
-         }
-         //used to check if the array was properly storing the values
-         for(int i = 0; i < list1.size(); i++){
-            System.out.println(list1.get(i));
-         }
-         scan1.close();
-         }
-      catch(FileNotFoundException e){
-         e.printStackTrace();
-         }
-      }
+   //Class Variables
+   private int Key = 0;
+   private double key = 0;
+   //class Constructor
+   public PiHash(){}
+   //Class function
+   public int genKey(int k){
+      key = (Math.PI*k)%257;
+      Key = (int) key;
+      return Key;
    }
+}
